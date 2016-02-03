@@ -1,0 +1,1 @@
+{"rapidgator.net":{"cookie":"PHPSESSID=sthuoiqnbr39lp4dm7nbouq2j3; user__=2.0%7CEjhXJXlIks2k4ygSp2XAsjvrGUZ%2BJfNw1TErou8oKxDS9hVc02WQCFmRCoFWHU41G%2FelYAJb60j8Ql1aubZ3g53n6oRe6rTE5q%2B6z12%2BERr6RWhjfFlXDc7y0c06haoe%7C1444049842%7C11053b861dd230a2f7b9a0056a4073eab6b2aade","time":1444049388},"uptobox.com":{"cookie":"","time":1444057452}}
