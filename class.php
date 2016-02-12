@@ -741,10 +741,13 @@ class stream_get extends getinfo {
 		}
 		
 		##########Begin short link ############
-		if(empty($this->zlink)==false && empty($this->link6_zip)==false && empty($link)==false ){ 
-			$datalink = $this->curl($this->link6_zip.$linkdown,'','',0);
-			if (preg_match('%(http:\/\/.++)%U', $datalink, $shortlink)) $lik = trim($shortlink[1]);
-			else $lik = $linkdown;	
+		if(empty($this->zlink)==false && empty($this->link6_zip)==false && empty($link)==false ){
+			$adfly="http://api.adf.ly/api.php?key=9f9b0ca5b0081bda7572e6c27a522833&uid=779847&advert_type=int&domain=adf.ly&url=".$linkdown;
+			$datalink = $this->curl($adfly,'','',0);
+			$shortest="https://api.shorte.st/s/1b82fa9bc96bc32b24ba3116233c31f3/".trim($datalink);
+			$datalink = $this->curl($shortest,'','',0);
+			$array = json_decode($datalink);
+			$lik = trim($array->shortenedUrl);
 		}
 		############ End short link  ##########
 		else $lik = $linkdown;
