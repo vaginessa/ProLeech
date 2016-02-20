@@ -165,7 +165,7 @@ function checkacc(type){
 			ajaxcheck('REAL');
 			ajaxcheck('ALLD');
 			ajaxcheck('BS');
-
+			ajaxcheck('UB');
 		}
 		else {
 			$("table[id='table"+type+"'] td[id^='unknown']").html('<img src="images/unknownload.gif" />');
