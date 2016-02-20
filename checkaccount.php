@@ -923,6 +923,86 @@ if (isset($_POST["check"])) {
 	}
 	#======================== end check acc real-debrid.com =======================#
 	################################################################################
+		################################################################################
+	#======================== begin check acc uptobox.com =====================#
+	elseif($_POST["check"]== "UB") {
+		if(count($obj->acc["uptobox.com"]["accounts"])>0) {
+			echo '<table id="tableUB" class="filelist" align="left" cellpadding="3" cellspacing="1" width="100%">
+				<tr class="flisttblhdr" valign="bottom">
+					<td width="30%"><b>accounts uptobox.com</b></td>
+					<td width="15%"><b>Type</b></td>
+					<td><b>Validity</b></td>
+					<td width="20%"><b>Report</b></td>
+				</tr>
+			';
+			for($i = 0; $i < count($obj->acc["uptobox.com"]["accounts"]); $i++) {
+				$account = $obj->acc["uptobox.com"]["accounts"][$i];
+				if (stristr($account,':')) {
+					list($user, $pass) = explode(':', $account);
+					$account = substr($account, 0, 5).'****';
+					$type = "account";
+					//checking part
+					$data = $obj->curl("https://login.uptobox.com/logarithme","","login=".$user."&password=".$pass."&op=login");
+					if(strpos($data,"Incorrect Login or Password")) {
+						echo '<tr class="flistmouseoff" align="center">
+						<td><b>'.$account.'</b></td><td>'.$type.'</td>
+						<td id="unknownUB"><font color=#CCFF00><b>Login failed !!!</b></font></td>
+						<td id="unknownUB"><font color=green><b>Removed</b></font></td></tr>';
+						$delacc[] = $i;
+						continue;
+					}
+					else {
+						preg_match('/^Set-Cookie: xfss=(.*?);/m', $data, $temp);
+						$cookie = $temp[1];
+					}
+				}
+				else {
+					$type = "cookie";
+					$cookie = $account;
+					$account = substr($account, 0, 10).'****';
+				}
+				$cookie = preg_replace("/(xfss=|XFSS=|Xfss=)/","",$cookie);
+				$data = $obj->curl("http://uptobox.com/?op=my_account","xfss=".$cookie,"");
+				if(strpos($data,'Location: http://uptobox.com')) { 
+					echo '<tr class="flistmouseoff" align="center">
+					<td><b>'.$account.'</b></td><td>'.$type.'</td>
+					<td id="unknownUB"><font color=#CCFF00><b>Login failed !!!</b></font></td>
+					<td id="unknownUB"><font color=green><b>Removed</b></font></td></tr>';
+					$delacc[] = $i;
+				}
+				else {
+					//Validity	
+					if(strpos($data,'Free member')) {
+						echo '<tr class="flistmouseoff" align="center">
+						<td><b>'.$account.'</b></td><td>'.$type.'</td>
+						<td id="unknownUB"><font color=#666666><b>FREE ACC</b></font></td>
+						<td id="unknownUB"><font color=green><b>Removed</b></font></td></tr>';
+						$delacc[] = $i;
+					}
+					elseif(preg_match('/strong>Premium-Account expire: (.+)<\\/strong><\\/div>/', $data, $matches)) {
+						echo '<tr class="flistmouseoff" align="center">
+						<td><b>'.$account.'</b></td><td>'.$type.'</td>
+						<td id="unknownUB"><font color=red><b>'.$matches[1].'</b></font></td>
+						<td id="unknownUB"><font color=blue><b>Working</b></font></td></tr>';
+					}
+					else {
+						echo '<tr class="flistmouseoff" align="center">
+						<td><b>'.$account.'</b></td><td>'.$type.'</td>
+						<td id="unknownUB">unknown</td>
+						<td id="unknownUB">unknown</td></tr>';
+					}
+				}
+			}
+			echo "</table>";		
+			$obj = new stream_get();	
+			if(isset($delacc)) {
+				foreach ($delacc as $i) unset($obj->acc["real-debrid.com"]["accounts"][$i]);
+				unset($delacc);
+				$check = true;
+			}
+		}
+	}
+	#======================== end check acc uptobox.com =======================#
 	#======================== begin check acc alldebrid.com =======================#
 	elseif($_POST["check"]== "ALLD") {
 		if(count($obj->acc["alldebrid.com"]["accounts"])>0) {
@@ -1351,6 +1431,26 @@ else {
 		}
 		echo "</table>";
 		echo "<a onclick=\"checkacc('REAL');\" href=\"javascript:void(0)\" style='TEXT-DECORATION: none'><font color=#FF6600>Check accounts real-debrid.com >>></font></a><br><br>";
+		$checkall = true;
+	}
+	if(count($obj->acc["uptobox.com"]["accounts"])>0) {
+		echo '<table id="tableUB" class="filelist" align="left" cellpadding="3" cellspacing="1" width="100%">
+			<tr class="flisttblhdr" valign="bottom">
+				<td width="30%"><b>accounts uptobox.com</b></td>
+				<td width="15%"><b>Type</b></td>
+				<td><b>Validity</b></td>
+				<td width="20%"><b>Report</b></td>
+			</tr>
+		';
+		for($i = 0; $i < count($obj->acc["uptobox.com"]["accounts"]); $i++) {
+			$account = $obj->acc["uptobox.com"]["accounts"][$i];
+			if (stristr($account,':')) $type = "account";
+			else $type = "cookie";
+			$account = substr($account, 0, 5)."****";
+			echo '<tr class="flistmouseoff" align="center"><td><b>'.$account.'</b></td><td>'.$type.'</td><td id="unknownUB">unknown</td><td id="unknownUB">unknown</td></tr>';
+		}
+		echo "</table>";
+		echo "<a onclick=\"checkacc('UB');\" href=\"javascript:void(0)\" style='TEXT-DECORATION: none'><font color=#FF6600>Check accounts uptobox.com >>></font></a><br><br>";
 		$checkall = true;
 	}
 	if(count($obj->acc["alldebrid.com"]["accounts"])>0) {
