@@ -4,8 +4,10 @@ if (stristr($account,':')) list($user, $pass) = explode(':',$account);
 else $cookie = $account;
 $maxacc = count($this->acc['uploaded.net']['accounts']);//checking number of accounts
 if($maxacc > 0){//more than 0 accounts
+	$n = rand(0,$maxacc);
 	for ($k=0; $k < $maxacc; $k++){
-		$account = trim($this->acc['uploaded.net']['accounts'][$k]);
+		$account = trim($this->acc['uploaded.net']['accounts'][$n%$maxacc]);
+		$n++;
 		if (stristr($account,':')) list($user, $pass) = explode(':',$account);
 			if(!$cookie) $cookie = $this->get_cookie("uploaded.net");
 			if(!$cookie){
