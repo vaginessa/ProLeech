@@ -18,6 +18,10 @@ if (preg_match('#^http://([a-z0-9]+)\.uptobox\.com/#', $url) || preg_match('#^ht
 			$size_name = Tools_get::size_name($link, "");
 			$filesize =  $size_name[0];
 			$filename = $size_name[1];
+			if($filesize=="-1")
+			{
+				continue;
+			}
 			if($link) break;
 		}
 	}
