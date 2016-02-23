@@ -22,6 +22,10 @@ if($maxacc > 0){//more than 0 accounts
 			$size_name = Tools_get::size_name($link, "");
 			$filesize =  $size_name[0];
 			$filename = $size_name[1];
+			if($filesize=="-1")
+			{
+				continue;
+			}
 			if($link) break;
 	}
 }
